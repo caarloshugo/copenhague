@@ -1,0 +1,527 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Ni Hao COPENHAGEN</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+    </script>
+    <link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css' rel='stylesheet' />
+    <link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css' rel='stylesheet' />
+
+    <link href='style.css' rel='stylesheet' />
+    <script type="text/javascript" src="script.js"></script>
+
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+    </script>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js?2"></script>
+    <script src="https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.css" rel="stylesheet" />
+    <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js'></script>
+    <script src="Leaflet.MakiMarkers.js"></script>
+
+    <!-- Maki icons -->
+    <link href='https://www.mapbox.com/maki/www/maki-sprite.css' rel='stylesheet' />
+
+    <style>
+      body { margin:0; padding:0; }
+      #map { position:absolute; top:0; bottom:0; width:100%; }
+      .custom-popup .linka {
+        padding:10px 0 20px;
+      }
+      .custom-popup a.link {
+        float:right;
+        color:#2a84b7;
+        font-size: 16px;
+        font-family: sans-serif;
+        font-weight: bold;
+      }
+      .custom-popup .leaflet-popup-content-wrapper{
+        background-color:rgba(255,255,255);
+        font-size:11px;
+        text-align:left;
+        color:#000;
+      }
+      .custom-popup .leaflet-popup-tip {
+        border-top:15px #fff;
+        background-color:rgba(255,255,255);
+      }
+      .custom-popup img{
+        width:100%;
+      }
+      .ui-select {
+        /*background:#fff;*/
+        position:absolute;
+        top: 10px;
+        right: 60px;
+        z-index: 100;
+        padding: 10px;
+        border-radius: 3px;
+        width: 100px;
+      }
+      span.size{
+        font-size: 13px;
+      }
+      label{
+        font-family: Arial;
+        font-size: 12px;
+      }
+      .iconos{
+        text-align:center;
+        display: inline-block;
+        margin-bottom: -4px;
+      }
+      .logo{
+		    position:absolute;
+        top:10px;
+        left:45px;
+		    width:15%;
+		    z-index:1000;
+      }
+      .menu {
+        background:#fff;
+        position:absolute;
+        top:10px;
+        right:138px; /*32px*/
+        z-index:1;
+        border-radius:3px;
+        width:120px;
+        border:1px solid rgba(0,0,0,0.4);
+        font-family: Arial;
+      }
+      .menu a {
+        font-size:13px;
+        color:#404040;
+        display:block;
+        margin:0;padding:0;
+        padding:10px;
+        text-decoration:none;
+        border-bottom:1px solid rgba(0,0,0,0.25);
+        text-align:center;
+      }
+      .menu a:first-child {
+        border-radius:3px 3px 0 0;
+      }
+      .menu a:last-child {
+        border:none;
+        border-radius:0 0 3px 3px;
+      }
+      .menu a:hover {
+        background:#f8f8f8;
+        color:#404040;
+      }
+      .menu a.active {
+        background:#3887BE;
+        color:#FFF;
+      }
+      .menu a.active:hover {
+        background: #3074a4;
+      }
+      .option-filter{
+        display:block;
+        margin-bottom: 5px;
+      }
+
+      .option-filter a{
+        text-decoration:none;
+      }
+
+      .option-filter a:active,
+      .option-filter a:visited,
+      .option-filter a:link{
+        color:#000;
+      }
+
+      .option-filter input{
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .option-filter li{
+        display:inline-block;
+        vertical-align: middle;
+      }
+      .maki-icon.restaurant {
+        background-color:#FF0000;
+        border:1px solid #800000;
+      }
+      .maki-icon.camera {
+        background-color:#FFFF00;
+        border:15px solid #228B22;
+      }
+      .maki-icon.shop {
+        background-color:#008000;
+        border:1px solid #228B22;
+      }
+
+      #menu-eat{
+        display:none;
+      }
+
+      #menu-eat a{
+        background-color:#FF0000;
+      }
+
+      #menu-see{
+        display:none;
+      }
+
+      #menu-see a{
+        background-color:#FFFF00;
+      }
+
+      #menu-shopping{
+        display:none;
+      }
+
+      #menu-shopping a{
+        background-color:#008000;
+      }
+
+      #filters .red{
+        background: red;
+        color: white;
+      }
+
+      #filters .yellow{
+        background: yellow;
+      }
+
+      #filters .green{
+        background: green;
+        color: white;
+      }
+      .leaflet-marker-icon .leaflet-zoom-animated .leaflet-clickable{
+        height: 0px !important;
+      }
+  </style>
+
+    <!-- Data -->
+    <script src="data/data.js"></script>
+
+  </head>
+  <body>
+ 	<!--<img class="logo" src="img/Logo_Goeuro.png"/>-->
+
+    <div id='filters' class='ui-select'>
+      <div id='cssmenu'>
+        <ul>
+          <li class='active has-sub' style="background-color: green;">
+            <a href='#' id="eat">            
+              <span class="" style="text-align:middle;">餐饮</span>
+            </a>
+            <ul class="sub-menu">
+              <li><a href='#' id="Cocktailbar"><span>鸡尾酒吧</span></a></li>
+              <li><a href='#' id="Italian"><span>意大利式</span></a></li>
+              <li><a href='#' id="French"><span>法式</span></a></li>
+              <li><a href='#' id="American"><span>美式</span></a></li>
+              <li><a href='#' id="Michelin"><span>米其林</span></a></li>
+              <li><a href='#' id="NewNordic"><span>新北欧</span></a></li>
+              <li><a href='#' id="DanishLunch"><span>丹麦式午餐</span></a></li>
+              <li><a href='#' id="Asian"><span>亚洲</span></a></li>
+            </ul>
+          </li>
+          <li class='active has-sub' style="background-color: red;">
+            <a href='#' id="see">             
+        <span>购物</span>
+            </a>
+            <ul class="sub-menu">
+              <li><a href='#' id="HCANDERSEN"><span>H.C.安徒生</span></a></li>
+              <li><a href='#' id="Kids"><span>儿童</span></a></li>
+              <li><a href='#' id="SquaresParks"><span>广场与公园</span></a></li>
+              <li><a href='#' id="Museum"><span>博物馆</span></a></li>
+              <li><a href='#' id="Architecture"><span>建筑</span></a></li>
+              <li><a href='#' id="Royal"><span>皇室</span></a></li>
+            </ul>
+          </li>
+          <li class='active has-sub' style="background-color: #FFFF00;">
+            <a href='#' id="shopping">              
+              <span>观光</span>
+            </a>
+            <ul class="sub-menu">
+              <li><a href='#' id="SHDanishDesign"><span>丹麦设计</span></a></li>
+              <li><a href='#' id="SHDanishFashion"><span> 丹麦时装</span></a></li>
+              <li><a href='#' id="SHLuxury"><span>奢侈品</span></a></li>
+              <li><a href='#' id="SHDepartmentStores"><span>百货商场</span></a></li>
+              <li><a href='#' id="SHCloth"><span>女装&男装</span></a></li>
+              <li><a href='#' id="JewelleryWatches"><span>钟表珠宝</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      
+      <div>
+        <button id="reset" type="reset" value="Reset">重置</button>
+      </div>
+      
+      </div>
+
+      <div class="custom-popup" id="map"></div>
+    <script>
+
+      var filters = document.getElementById('filters');
+      var checkboxes = document.getElementsByClassName('filter');
+      //var layers = document.getElementById('menu-eat');
+
+      L.mapbox.accessToken = "pk.eyJ1IjoiZ3JlZ2VyIiwiYSI6InlWd3lBM3MifQ.SRbTwCgCH3Kt1iM9oLl8Vg";
+
+      /*var northEast = L.latLng(55.6712674, 12.5608388);
+      var southWest = L.latLng(76.89909761,12.577490);
+
+   	  bounds = L.latLngBounds(southWest, northEast);*/
+
+      var map = L.mapbox.map("map", "greger.l8ino7cl", {
+        //maxBounds: bounds,
+		    minZoom: 3,
+		    legendControl:{
+          position: 'topright'
+        }
+      });
+
+      map.setView([55.6652674, 12.5908388], 12);
+      //map.fitBounds(bounds);
+
+      var markersCheck = L.mapbox.featureLayer().setGeoJSON(data, {
+        /*pointToLayer: function (feature, latlng) {
+          return L.marker(latlng, {icon: myIcon});
+        }*/
+      });
+
+      markersCheck.eachLayer(function(layer) {
+		var imgUrl;
+
+        var street = layer.feature.properties.Street;        
+        var zip = layer.feature.properties.Zip;
+        var city = layer.feature.properties.City;        
+        var website = layer.feature.properties.Website;
+        var categoryChino = layer.feature.properties.CategoryChino;
+        var category = layer.feature.properties.Category;
+        var name = layer.feature.properties.Name;
+        var icon;
+        var makiicon;
+
+        if (category == 'Cocktailbar' || category == 'Italian' || category == 'French' || category == 'American' || category == 'Michelin' || category == 'NewNordic' || category == 'DanishLunch' || category == 'Asian'){
+			makiicon = L.MakiMarkers.icon({
+				icon: "restaurant",
+				color: "#008000",
+				size: "m",
+				className: category + " eat"
+			});
+        } else if (category == 'HCANDERSEN' || category == 'Kids' || category == 'SquaresParks' || category == 'Museum' || category == 'Architecture' || category == 'Royal'){
+			makiicon = L.MakiMarkers.icon({
+				icon: "camera",
+				color: "#FF0000",
+				size: "m",
+				className: category + " see"
+			});
+        } else if (category == 'SHDanishDesign' || category == 'SHDanishFashion' || category == 'SHLuxury' || category == 'SHDepartmentStores' || category == 'SHCloth' || category == 'JewelleryWatches'){
+			makiicon = L.MakiMarkers.icon({
+				icon: "shop",
+				color: "#FFFF00",
+				size: "m",
+				className: category + " shopping"
+			});
+        } 
+
+		/*
+        var myIcon = L.icon({
+          iconUrl: icon,
+          iconSize: [23,23],
+          iconAnchor: [12, 30],
+          popupAnchor: [0, -19],
+          className: category
+        });
+		*/
+        
+        var url = '<a href="http://'+website+'" target="_blank">'+website+'</a>';
+        
+        //Funcion para los infobox
+        var content = ' <div class="custom-popup"><h3><center>' + name + '</center></h3>' +
+          '<span class="size"><b>街道:</b> ' + street + '<\/span><br />' +
+          '<span class="size"><b>邮编:</b> ' + zip + '<\/span><br />' +
+           '<span class="size"><b>城市: </b> ' + city + '<\/span><br />' +
+        '<span class="size"><b>网站:</b>' + url + '<\/span><br />' +
+        '<span class="size"><b>类别:</b> ' + categoryChino + '<\/span><br />' +        
+        '</div>';
+		
+		/*
+        layer.bindPopup(content, {
+            closeButton: false,
+            minWidth: 320
+          });
+        layer.setIcon(myIcon);
+        */
+        
+        L.marker([layer._latlng.lat, layer._latlng.lng], {icon: makiicon}).addTo(map).bindPopup(content);
+      });
+	
+	/*
+      //map.addLayer(clusterGroup);
+      //map.addLayer(markersCheck);
+      function change() {
+        // Find all checkboxes that are checked and build a list of their values
+        var on = [];
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) on.push(checkboxes[i].value);
+        }
+        // The filter function takes a GeoJSON feature object
+        // and returns true to show it or false to hide it.
+        markersCheck.setFilter(function (f) {
+            // check each marker's symbol to see if its value is in the list
+            // of symbols that should be on, stored in the 'on' array
+           return $.inArray(f.properties['category'], on) != -1;
+        });
+
+        markersCheck.eachLayer(function(layer) {
+        //clusterGroup.addLayer(layer);
+        var imgUrl;
+
+        var HowMany = layer.feature.properties.Howmanykin;
+        if (HowMany == 0){
+          HowMany = '';
+        }
+
+        var PictureText = layer.feature.properties.PictureTex;
+        if (PictureText == null){
+          PictureText = '';
+        }
+
+        var Specialty = layer.feature.properties.Specialty;
+        if (Specialty == null){
+          Specialty = '';
+        }
+
+        var category = layer.feature.properties.category;
+        var icon;
+
+        if (category == 'Cocktailbar' || category == 'Italian' || category == 'French' || category == 'American' || category == 'Michelin' || category == 'NewNordic' || category == 'DanishLunch' || category == 'Asian'){
+          icon = 'img/restaurant-18.svg'; //Eat
+        } else if (category == 'HCANDERSEN' || category == 'Kids' || category == 'SquaresParks' || category == 'Museum' || category == 'Architecture' || category == 'Royal'){
+          icon = 'img/camera-18.svg'; //See
+        } else if (category == 'SHDanishDesign' || category == 'SHDanishFashion' || category == 'SHLuxury' || category == 'SHDepartmentStores' || category == 'SHCloth' || category == 'JewelleryWatches'){
+          icon = 'img/shop-18.svg'; //Shopping
+        } 
+
+        var myIcon = L.icon({
+          iconUrl: icon,
+          popupAnchor: [0, -19]
+        });
+
+        //Funcion para los infobox
+        var content = ' <div class="custom-popup">' +
+          '<span class="size"><b>街道:</b> ' + street + '<\/span><br />' +
+          '<span class="size"><b>邮编:</b> ' + zip + '<\/span><br />' +
+           '<span class="size"><b>城市:</b> ' + city + '<\/span><br />' +
+        '<span class="size"><b>网站:</b> ' + website + '<\/span><br />' +
+        '<span class="size"><b>类别:</b> ' + category + '<\/span><br />' +        
+        '</div>';
+        layer.bindPopup(content, {
+            closeButton: false,
+            minWidth: 320
+          });
+        layer.setIcon(myIcon);
+      });
+
+        return false;
+    }
+
+    filters.onchange = function() {
+      change();
+    } ;
+    */
+
+    // Initially filter the markers
+
+    $('#shopping').click(function(){
+      $('#menu-shopping').show();
+      $('#menu-see').hide();
+      $('#menu-eat').hide();
+    });
+
+    $('#camera').click(function(){
+      $('#menu-see').show();
+      $('#menu-shopping').hide();
+      $('#menu-eat').hide();
+    });
+
+    $('#restaurant').click(function(){
+      $('#menu-eat').show();
+      $('#menu-see').hide();
+      $('#menu-shopping').hide();
+    });
+
+    $('#eat').click(function(){
+		var id = $(this).attr('id');
+	    $('.leaflet-marker-icon').hide();
+	    $('.' + id).show();
+    });
+
+    $('#see').click(function(){
+		var id = $(this).attr('id');
+	    $('.leaflet-marker-icon').hide();
+	    $('.' + id).show();
+    });
+
+    $('#shopping').click(function(){
+		var id = $(this).attr('id');
+	    $('.leaflet-marker-icon').hide();
+	    $('.' + id).show();
+    });
+
+	//sub-menus
+    $('.sub-menu a').click(function(){
+		var id = $(this).attr('id');
+	    $('.leaflet-marker-icon').hide();
+	    $('.' + id).show();
+    });
+	
+	$("#reset").click(function() {
+		$('.leaflet-marker-icon').show();
+	});
+	
+	// When the form is touched, re-filter markers
+	/*
+    $("#reset").click(function() {
+      markersCheck.setFilter(function() { return false; });
+
+      $('input[type="checkbox"]').prop('checked', true);
+
+
+      markersCheck.setFilter(function() { return true; });
+      markersCheck.eachLayer(function(layer) {
+
+        var imgUrl;
+        var category = layer.feature.properties.category;
+        var icon;
+
+        if (category == 'Cocktailbar' || category == 'Italian' || category == 'French' || category == 'American' || category == 'Michelin' || category == 'NewNordic' || category == 'DanishLunch' || category == 'Asian'){
+          icon = 'img/restaurant.png'; //Eat
+        } else if (category == 'HCANDERSEN' || category == 'Kids' || category == 'SquaresParks' || category == 'Museum' || category == 'Architecture' || category == 'Royal'){
+          icon = 'img/camera.png'; //See
+        } else if (category == 'SHDanishDesign' || category == 'SHDanishFashion' || category == 'SHLuxury' || category == 'SHDepartmentStores' || category == 'SHCloth' || category == 'JewelleryWatches'){
+          icon = 'img/shopping.png'; //Shopping
+        } 
+
+        var myIcon = L.icon({
+          iconUrl: icon,
+          popupAnchor: [0, -19]
+        });
+
+        //Funcion para los infobox
+        var content = ' <div class="custom-popup">' +
+          '<span class="size"><b>街道:</b> ' + street + '<\/span><br />' +
+          '<span class="size"><b>邮编:</b> ' + zip + '<\/span><br />' +
+           '<span class="size"><b>城市:</b> ' + city + '<\/span><br />' +
+        '<span class="size"><b>网站:</b> ' + website + '<\/span><br />' +
+        '<span class="size"><b>类别:</b> ' + category + '<\/span><br />' +        
+        '</div>';
+        layer.bindPopup(content, {
+            closeButton: false,
+            minWidth: 320
+          });
+        layer.setIcon(myIcon);
+      });
+    });
+    */
+    </script>
+  </body>
+</html>
